@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-100">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GGS Cloud Services | Network Authentication Portal</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind Theme Customization for GGS Branding -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            ggs: {
+              navy: '#0b2545',
+              deepNavy: '#051930',
+              gold: '#c59b27',
+              goldHover: '#b0881e',
+              blue: '#134074',
+              accent: '#0078d4',
+              lightBg: '#f4f6f9',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    /* Smooth transition effects */
+    .fade-enter {
+      animation: fadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="h-full flex flex-col font-sans text-slate-800 bg-slate-100 antialiased selection:bg-ggs-gold selection:text-ggs-navy">
+
+  <header class="bg-ggs-navy border-b-4 border-ggs-gold text-white shadow-lg sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Logo and School Title -->
+      <div class="flex items-center gap-3.5 cursor-pointer" onclick="resetToHome()">
+        <div class="w-12 h-12 bg-white text-ggs-navy rounded-xl flex items-center justify-center font-extrabold text-xl shadow-inner border-2 border-ggs-gold tracking-tighter shrink-0">
+          GGS
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg md:text-xl font-bold tracking-tight text-white leading-snug">
+              Gravesend Grammar School
+            </h1>
+            <span class="hidden md:inline-block bg-ggs-gold/20 text-ggs-gold text-[10px] font-bold px-2 py-0.5 rounded border border-ggs-gold/30 uppercase tracking-widest">
+              Cloud Portal
+            </span>
+          </div>
+          <p class="text-xs text-slate-300 font-medium tracking-wide">Network & Internet Authentication Gateway</p>
+        </div>
+      </div>
+
+      <!-- Action Buttons & Device Guide Toggle -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button 
+          onclick="toggleDeviceGuide()" 
+          class="inline-flex items-center gap-1.5 bg-slate-800/80 hover:bg-slate-800 text-slate-200 hover:text-white text-xs font-semibold px-3 py-2 rounded-lg border border-slate-700 transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-ggs-gold"
+          title="Learn how to open this page on your phone or other devices"
+        >
+          <svg class="w-4 h-4 text-ggs-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+          </svg>
+          <span class="hidden sm:inline">Access on Any Device</span>
+          <span class="sm:hidden">Share App</span>
+        </button>
+
+        <div id="headerStatusBadge" class="flex items-center gap-2 text-xs font-semibold px-3 py-2 rounded-lg bg-amber-500/10 text-amber-300 border border-amber-500/30">
+          <span id="headerStatusDot" class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+          <span id="headerStatusText" class="hidden sm:inline">Not Authenticated</span>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8 flex flex-col justify-center">
+
+    <!-- Top Notice Banner -->
+    <div class="bg-blue-900/10 border-l-4 border-ggs-blue p-4 rounded-r-xl shadow-sm mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <div class="flex items-start gap-3">
+        <div class="p-2 bg-ggs-blue text-white rounded-lg shrink-0 mt-0.5 sm:mt-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-ggs-navy">Network Authentication Required</h2>
+          <p class="text-xs text-slate-600 mt-0.5">To gain full internet and school resource access, please log in using your valid GGS credentials.</p>
+        </div>
+      </div>
+      <a href="https://www.gravesendgrammar.com/" target="_blank" rel="noopener" class="text-xs font-semibold text-ggs-accent hover:text-ggs-navy underline shrink-0 flex items-center gap-1 self-end sm:self-auto">
+        Official School Website
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+      </a>
+    </div>
+
+    <div class="bg-amber-500/10 border border-amber-300/60 rounded-xl p-4 mb-6 shadow-sm">
+      <div class="flex items-center justify-between mb-2">
+        <h3 class="text-xs font-bold text-amber-900 uppercase tracking-wider flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
+          Quick Test Credentials
+        </h3>
+        <span class="text-[11px] font-medium text-amber-800">Click "Quick Fill" to test login</span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+        <!-- Student Test Info -->
+        <div class="bg-white/90 border border-amber-200 rounded-lg p-2.5 flex items-center justify-between shadow-xs">
+          <div>
+            <span class="font-bold text-ggs-navy">Student Account:</span>
+            <div class="text-slate-600 mt-0.5">User: <code class="bg-slate-100 text-slate-800 px-1.5 py-0.5 rounded font-mono font-semibold">student</code> | Pass: <code class="bg-slate-100 text-slate-800 px-1.5 py-0.5 rounded font-mono font-semibold">ggs2026</code></div>
+          </div>
+          <button onclick="quickLogin('student', 'ggs2026', 'Student')" class="ml-2 bg-amber-500 hover:bg-amber-600 text-white font-semibold text-xs px-2.5 py-1.5 rounded transition shadow-xs shrink-0">
+            Quick Fill
+          </button>
+        </div>
+
+        <!-- Staff Test Info -->
+        <div class="bg-white/90 border border-amber-200 rounded-lg p-2.5 flex items-center justify-between shadow-xs">
+          <div>
+            <span class="font-bold text-ggs-navy">Staff Account:</span>
+            <div class="text-slate-600 mt-0.5">User: <code class="bg-slate-100 text-slate-800 px-1.5 py-0.5 rounded font-mono font-semibold">staff</code> | Pass: <code class="bg-slate-100 text-slate-800 px-1.5 py-0.5 rounded font-mono font-semibold">admin123</code></div>
+          </div>
+          <button onclick="quickLogin('staff', 'admin123', 'Staff')" class="ml-2 bg-amber-500 hover:bg-amber-600 text-white font-semibold text-xs px-2.5 py-1.5 rounded transition shadow-xs shrink-0">
+            Quick Fill
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="unauthView" class="fade-enter space-y-6">
+      
+      <!-- Main Action Buttons Card -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-md text-center">
+        <div class="max-w-md mx-auto mb-8">
+          <div class="w-16 h-16 bg-ggs-navy/5 text-ggs-navy rounded-2xl flex items-center justify-center mx-auto mb-3 border border-ggs-navy/10">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457-.39-2.823-1.07-4"></path>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold text-ggs-navy">Cloud Authentication</h2>
+          <p class="text-sm text-slate-500 mt-1">Select your account portal to sign in and initiate network access.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto">
+          <!-- Student Login Button -->
+          <button 
+            onclick="openLoginModal('Student')" 
+            class="group bg-ggs-navy hover:bg-ggs-deepNavy text-white p-4 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-700 flex items-center justify-between"
+          >
+            <div class="flex items-center gap-3">
+              <div class="p-2 bg-white/10 rounded-lg text-ggs-gold group-hover:scale-105 transition-transform">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
+                </svg>
+              </div>
+              <div class="text-left">
+                <span class="block text-base font-bold">Student Login</span>
+                <span class="text-xs text-slate-300">Office 365 / Google</span>
+              </div>
+            </div>
+            <svg class="w-5 h-5 text-slate-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          </button>
+
+          <!-- Staff Login Button -->
+          <button 
+            onclick="openLoginModal('Staff')" 
+            class="group bg-ggs-blue hover:bg-ggs-navy text-white p-4 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-blue-900 flex items-center justify-between"
+          >
+            <div class="flex items-center gap-3">
+              <div class="p-2 bg-white/10 rounded-lg text-amber-300 group-hover:scale-105 transition-transform">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V10m0 0h4m-4 0v11"></path>
+                </svg>
+              </div>
+              <div class="text-left">
+                <span class="block text-base font-bold">Staff Login</span>
+                <span class="text-xs text-slate-200">Staff Portal & SIMS</span>
+              </div>
+            </div>
+            <svg class="w-5 h-5 text-slate-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          </button>
+
+          <!-- Web Authentication Button -->
+          <button 
+            onclick="openLoginModal('Web Authentication')" 
+            class="group bg-slate-50 hover:bg-slate-100 text-slate-800 p-4 rounded-xl shadow-xs border border-slate-300 transition-all duration-200 flex items-center justify-between"
+          >
+            <div class="flex items-center gap-3">
+              <div class="p-2 bg-slate-200 rounded-lg text-slate-700 group-hover:scale-105 transition-transform">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                </svg>
+              </div>
+              <div class="text-left">
+                <span class="block text-base font-bold text-ggs-navy">Web Auth</span>
+                <span class="text-xs text-slate-500">Wi-Fi Captive Gateway</span>
+              </div>
+            </div>
+            <svg class="w-5 h-5 text-slate-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          </button>
+
+          <!-- Main School Site Link -->
+          <a 
+            href="https://www.gravesendgrammar.com/" 
+            target="_blank" 
+            rel="noopener"
+            class="group bg-slate-50 hover:bg-slate-100 text-slate-800 p-4 rounded-xl shadow-xs border border-slate-300 transition-all duration-200 flex items-center justify-between"
+          >
+            <div class="flex items-center gap-3">
+              <div class="p-2 bg-slate-200 rounded-lg text-slate-700 group-hover:scale-105 transition-transform">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+                </svg>
+              </div>
+              <div class="text-left">
+                <span class="block text-base font-bold text-ggs-navy">Main School Site</span>
+                <span class="text-xs text-slate-500">gravesendgrammar.com</span>
+              </div>
+            </div>
+            <svg class="w-5 h-5 text-slate-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="authView" class="hidden fade-enter space-y-6">
+      
+      <!-- Session Success Header -->
+      <div class="bg-white border-2 border-emerald-500/40 rounded-2xl p-6 sm:p-8 shadow-lg text-center relative overflow-hidden">
+        <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] uppercase font-bold tracking-widest px-4 py-1 rounded-bl-xl">
+          Active Session
+        </div>
+
+        <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 ring-8 ring-emerald-50">
+          <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Authenticated Successfully</h2>
+        <p class="text-slate-600 text-sm mt-1">Your device is authorized on the Gravesend Grammar School Network.</p>
+
+        <!-- Session Metadata Card -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 border border-slate-200 rounded-xl p-4 my-6 text-left text-xs">
+          <div>
+            <span class="text-slate-400 block font-medium">Logged User</span>
+            <span id="dashUser" class="font-bold text-ggs-navy text-sm font-mono">student</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block font-medium">Portal Role</span>
+            <span id="dashRole" class="font-bold text-slate-800 text-sm">Student</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block font-medium">Assigned IP</span>
+            <span class="font-bold text-slate-800 text-sm font-mono">10.124.8.142</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block font-medium">Session Uptime</span>
+            <span id="sessionTimer" class="font-bold text-emerald-600 text-sm font-mono">00:00:01</span>
+          </div>
+        </div>
+
+        <!-- Direct Cloud Resource Access Links -->
+        <div class="text-left mt-6">
+          <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Quick Launch Cloud Resources</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <a href="https://drive.google.com" target="_blank" class="p-3 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 rounded-xl flex flex-col items-center text-center group transition">
+              <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">📁</span>
+              <span class="text-xs font-bold text-slate-800">Google Drive</span>
+            </a>
+            <a href="https://classroom.google.com" target="_blank" class="p-3 bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 rounded-xl flex flex-col items-center text-center group transition">
+              <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">🏫</span>
+              <span class="text-xs font-bold text-slate-800">Classroom</span>
+            </a>
+            <a href="https://outlook.office.com" target="_blank" class="p-3 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 rounded-xl flex flex-col items-center text-center group transition">
+              <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">✉️</span>
+              <span class="text-xs font-bold text-slate-800">School Mail</span>
+            </a>
+            <a href="https://www.gravesendgrammar.com" target="_blank" class="p-3 bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-300 rounded-xl flex flex-col items-center text-center group transition">
+              <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">🏛️</span>
+              <span class="text-xs font-bold text-slate-800">Main Portal</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Disconnect Button -->
+        <div class="mt-8 pt-6 border-t border-slate-200 flex justify-center">
+          <button onclick="logout()" class="inline-flex items-center gap-2 bg-slate-200 hover:bg-red-50 text-slate-700 hover:text-red-700 font-semibold text-xs px-5 py-2.5 rounded-xl transition border border-slate-300">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+            Disconnect Network Session
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <div id="deviceGuideModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+    <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden fade-enter">
+      
+      <!-- Modal Title -->
+      <div class="bg-ggs-navy text-white p-5 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="p-1.5 bg-ggs-gold/20 rounded-lg text-ggs-gold">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+          </div>
+          <div>
+            <h3 class="font-bold text-base">How to Access This Site on Any Device</h3>
+            <p class="text-xs text-slate-300">Open on iPhone, Android, iPad, or any device on your Wi-Fi</p>
+          </div>
+        </div>
+        <button onclick="toggleDeviceGuide()" class="text-slate-300 hover:text-white p-1 rounded-lg">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <!-- Guide Content -->
+      <div class="p-6 overflow-y-auto space-y-6 text-sm text-slate-700">
+        
+        <!-- Method 1: Free Cloud Hosting (Recommended) -->
+        <div class="space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-ggs-navy text-white text-xs font-bold flex items-center justify-center">1</span>
+            <h4 class="font-bold text-slate-900 text-sm">Host Free on GitHub Pages or Vercel (Easiest for Mobile)</h4>
+          </div>
+          <p class="text-xs text-slate-600 pl-8">You can upload this <code class="bg-slate-100 px-1 py-0.5 rounded font-mono">index.html</code> file to a free static host to generate a web link accessible from anywhere:</p>
+          <ol class="list-disc pl-12 text-xs space-y-1 text-slate-600">
+            <li>Go to <strong>github.com</strong> and create a public repository.</li>
+            <li>Upload this <code class="bg-slate-100 px-1 py-0.5 rounded font-mono">index.html</code> file.</li>
+            <li>In Settings &gt; Pages, choose <em>main branch</em> and click Save. You will receive a live URL.</li>
+          </ol>
+        </div>
+
+        <hr class="border-slate-200" />
+
+        <!-- Method 2: Local Network Sharing -->
+        <div class="space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-ggs-gold text-ggs-navy text-xs font-bold flex items-center justify-center">2</span>
+            <h4 class="font-bold text-slate-900 text-sm">Share Over Your Local Wi-Fi (Python Server)</h4>
+          </div>
+          <p class="text-xs text-slate-600 pl-8">If your PC and phone are on the same Wi-Fi network, run a local web server:</p>
+          <div class="pl-8">
+            <div class="bg-slate-900 text-slate-200 p-3 rounded-lg text-xs font-mono">
+              cd /path/to/folder<br/>
+              python3 -m http.server 8000
+            </div>
+            <p class="text-xs text-slate-500 mt-2">Then open your computer's local IP on your phone's browser: <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-800 font-mono">http://192.168.x.x:8000</code></p>
+          </div>
+        </div>
+
+        <hr class="border-slate-200" />
+
+        <!-- Method 3: Mobile Web App Shortcut -->
+        <div class="space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-slate-200 text-slate-700 text-xs font-bold flex items-center justify-center">3</span>
+            <h4 class="font-bold text-slate-900 text-sm">Save to Mobile Home Screen</h4>
+          </div>
+          <p class="text-xs text-slate-600 pl-8">When viewing the link on Safari (iOS) or Chrome (Android), tap <strong>Share / Options &gt; Add to Home Screen</strong> to use it as a native web application.</p>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="bg-slate-50 p-4 border-t border-slate-200 flex justify-end">
+        <button onclick="toggleDeviceGuide()" class="bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs px-4 py-2 rounded-lg transition">
+          Got It
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="loginModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+    <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8 relative fade-enter">
+      
+      <!-- Close Modal Button -->
+      <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 bg-ggs-navy text-ggs-gold rounded-xl flex items-center justify-center font-extrabold text-lg border border-ggs-gold">
+          GGS
+        </div>
+        <div>
+          <h3 id="modalRoleTitle" class="text-xl font-extrabold text-ggs-navy">Student Login</h3>
+          <p class="text-xs text-slate-500">Sign in with your school network account</p>
+        </div>
+      </div>
+
+      <!-- Error Alert Box -->
+      <div id="loginError" class="hidden bg-red-50 text-red-700 border border-red-200 text-xs p-3 rounded-lg mb-4 flex items-center gap-2">
+        <svg class="w-4 h-4 shrink-0 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <span>Invalid credentials. Use <strong>student / ggs2026</strong> or <strong>staff / admin123</strong>.</span>
+      </div>
+
+      <!-- Login Form -->
+      <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
+        <div>
+          <label for="username" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Username / Network ID</label>
+          <input 
+            type="text" 
+            id="username" 
+            required 
+            placeholder="e.g. student or staff"
+            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:outline-none focus:bg-white focus:ring-2 focus:ring-ggs-accent focus:border-transparent transition"
+          />
+        </div>
+
+        <div>
+          <label for="password" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Password</label>
+          <input 
+            type="password" 
+            id="password" 
+            required 
+            placeholder="••••••••"
+            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:outline-none focus:bg-white focus:ring-2 focus:ring-ggs-accent focus:border-transparent transition"
+          />
+        </div>
+
+        <button 
+          type="submit" 
+          class="w-full bg-ggs-navy hover:bg-ggs-deepNavy text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-sm mt-2 flex items-center justify-center gap-2"
+        >
+          <span>Authenticate Session</span>
+          <svg class="w-4 h-4 text-ggs-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <footer class="bg-white border-t border-slate-200 py-6 px-4 text-center text-xs text-slate-500">
+    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div>
+        &copy; Gravesend Grammar School — Cloud Services Authentication Replica
+      </div>
+      <div class="flex items-center gap-4 text-slate-400">
+        <span>GGS Network Security</span>
+        <span>•</span>
+        <button onclick="toggleDeviceGuide()" class="hover:underline text-ggs-accent">Device Access Guide</button>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let activeRole = 'Student';
+    let timerInterval = null;
+    let timerSeconds = 0;
+
+    // Open Modal for selected role
+    function openLoginModal(role) {
+      activeRole = role;
+      document.getElementById('modalRoleTitle').innerText = role + ' Login';
+      document.getElementById('loginError').classList.add('hidden');
+      const modal = document.getElementById('loginModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    // Close Modal
+    function closeLoginModal() {
+      const modal = document.getElementById('loginModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // Quick Fill helper for demo testing
+    function quickLogin(user, pass, role) {
+      openLoginModal(role);
+      document.getElementById('username').value = user;
+      document.getElementById('password').value = pass;
+    }
+
+    // Form submission validation
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const userVal = document.getElementById('username').value.trim().toLowerCase();
+      const passVal = document.getElementById('password').value;
+
+      const isStudent = (userVal === 'student' && passVal === 'ggs2026');
+      const isStaff = (userVal === 'staff' && passVal === 'admin123');
+
+      if (isStudent || isStaff) {
+        closeLoginModal();
+        startAuthenticatedSession(userVal, activeRole);
+      } else {
+        document.getElementById('loginError').classList.remove('hidden');
+      }
+    }
+
+    // Start Session Dashboard
+    function startAuthenticatedSession(username, role) {
+      document.getElementById('unauthView').classList.add('hidden');
+      document.getElementById('authView').classList.remove('hidden');
+
+      document.getElementById('dashUser').innerText = username;
+      document.getElementById('dashRole').innerText = role;
+
+      // Update Header Status Badge
+      const statusBadge = document.getElementById('headerStatusBadge');
+      statusBadge.className = 'flex items-center gap-2 text-xs font-semibold px-3 py-2 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+      
+      document.getElementById('headerStatusDot').className = 'w-2.5 h-2.5 rounded-full bg-emerald-400';
+      document.getElementById('headerStatusText').innerText = 'Authenticated (' + username + ')';
+
+      // Start session uptime timer
+      clearInterval(timerInterval);
+      timerSeconds = 0;
+      timerInterval = setInterval(() => {
+        timerSeconds++;
+        const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+        const secs = String(timerSeconds % 60).padStart(2, '0');
+        document.getElementById('sessionTimer').innerText = `00:${mins}:${secs}`;
+      }, 1000);
+    }
+
+    // Log Out
+    function logout() {
+      clearInterval(timerInterval);
+      document.getElementById('authView').classList.add('hidden');
+      document.getElementById('unauthView').classList.remove('hidden');
+      
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+
+      // Reset Header Badge
+      const statusBadge = document.getElementById('headerStatusBadge');
+      statusBadge.className = 'flex items-center gap-2 text-xs font-semibold px-3 py-2 rounded-lg bg-amber-500/10 text-amber-300 border border-amber-500/30';
+      
+      document.getElementById('headerStatusDot').className = 'w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse';
+      document.getElementById('headerStatusText').innerText = 'Not Authenticated';
+    }
+
+    function resetToHome() {
+      if (!document.getElementById('authView').classList.contains('hidden')) {
+        // Logged in mode remains active
+      }
+    }
+
+    // Toggle Device Guide Modal
+    function toggleDeviceGuide() {
+      const modal = document.getElementById('deviceGuideModal');
+      if (modal.classList.contains('hidden')) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      } else {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+  </script>
+</body>
+</html>
